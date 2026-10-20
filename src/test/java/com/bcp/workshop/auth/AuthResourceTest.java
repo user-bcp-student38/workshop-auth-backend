@@ -3,6 +3,8 @@ package com.bcp.workshop.auth;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,6 +33,7 @@ class AuthResourceTest {
     void logsInWithUsernameContainingApostrophe() throws Exception {
         String username = "student's-" + UUID.randomUUID();
         String databaseUrl = System.getenv().getOrDefault("AUTH_DB_URL", "jdbc:sqlite:./data/workshop.db");
+        Files.createDirectories(Path.of("data"));
         try (Connection connection = DriverManager.getConnection(databaseUrl);
              PreparedStatement statement = connection.prepareStatement(
                      "INSERT INTO legacy_users(username,password,display_name,role) VALUES (?, ?, ?, ?)")) {
