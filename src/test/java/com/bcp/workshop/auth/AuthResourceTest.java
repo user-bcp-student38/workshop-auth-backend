@@ -1,5 +1,6 @@
 package com.bcp.workshop.auth;
 
+import jakarta.inject.Inject;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @QuarkusTest
 class AuthResourceTest {
+    @Inject
+    LegacyDatabase database;
+
     @Test
     void logsInWithWorkshopUser() {
         given()
@@ -31,6 +35,7 @@ class AuthResourceTest {
 
     @Test
     void logsInWithUsernameContainingApostrophe() throws Exception {
+        database.findByCredentials("student", "Workshop123!");
         String username = "student's-" + UUID.randomUUID();
         String databaseUrl = System.getenv().getOrDefault("AUTH_DB_URL", "jdbc:sqlite:./data/workshop.db");
         Files.createDirectories(Path.of("data"));
